@@ -263,7 +263,7 @@
           if( !rowHeight ){
             return;
           }
-          var scrollTop = evt.target.scrollTop
+          var scrollTop = evt.target.scrollTop;
           var scrollHeight = evt.target.scrollHeight;
           var clientHeight = evt.target.clientHeight;
           var diff = Math.abs(scrollTop - lastFixPos);
