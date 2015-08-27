@@ -263,18 +263,17 @@
           if( !rowHeight ){
             return;
           }
-      	  var scrollTop = evt.target.scrollTop;
-      	  var scrollHeight = evt.target.scrollHeight;
-      	  var clientHeight = evt.target.clientHeight;
+          var scrollTop = evt.target.scrollTop
+          var scrollHeight = evt.target.scrollHeight;
+          var clientHeight = evt.target.clientHeight;
           var diff = Math.abs(scrollTop - lastFixPos);
           if(diff > (state.threshold * rowHeight)){
-            // Enter the angular world for the state change to take effect.
-            scope.$apply(function(){
-              state.firstVisible = Math.floor(scrollTop / rowHeight);
-              state.visible = Math.ceil(dom.viewport[0].clientHeight / rowHeight);
-              var sticky = scrollTop + clientHeight >= scrollHeight;
-              recomputeActive();
-            });
+          // Enter the angular world for the state change to take effect.
+            state.firstVisible = Math.floor(scrollTop / rowHeight);
+            state.visible = Math.ceil(dom.viewport[0].clientHeight / rowHeight);
+            var sticky = scrollTop + clientHeight >= scrollHeight;
+            recomputeActive();
+            scope.digest();
             lastFixPos = scrollTop;
           }
         }
