@@ -22,7 +22,7 @@
     return Math.max(min, Math.min(value, max));
   }
 
-  mod.directive('sfVirtualRepeat', ['$log', '$rootElement', function($log, $rootElement){
+  mod.directive('sfVirtualRepeat', ['$rootElement', function($rootElement){
 
     return {
       require: '?ngModel',
@@ -136,14 +136,10 @@
           maxHeight = style && style.getPropertyValue('max-height'),
           height = style && style.getPropertyValue('height');
 
-      if( height && height !== '0px' && height !== 'auto' ){
-        $log.debug('Row height is "%s" from css height', height);
-      }else if( maxHeight && maxHeight !== '0px' && maxHeight !== 'none' ){
+      if( maxHeight && maxHeight !== '0px' && maxHeight !== 'none' ){
         height = maxHeight;
-        $log.debug('Row height is "%s" from css max-height', height);
       }else if( element.clientHeight ){
         height = element.clientHeight+'px';
-        $log.debug('Row height is "%s" from client height', height);
       }else{
         throw new Error("Unable to compute height of row");
       }
@@ -267,19 +263,19 @@
           if( !rowHeight ){
             return;
           }
-          var diff = Math.abs(evt.target.scrollTop - lastFixPos);
+      	  var scrollTop = evt.target.scrollTop;
+      	  var scrollHeight = evt.target.scrollHeight;
+      	  var clientHeight = evt.target.clientHeight;
+          var diff = Math.abs(scrollTop - lastFixPos);
           if(diff > (state.threshold * rowHeight)){
             // Enter the angular world for the state change to take effect.
             scope.$apply(function(){
-              state.firstVisible = Math.floor(evt.target.scrollTop / rowHeight);
+              state.firstVisible = Math.floor(scrollTop / rowHeight);
               state.visible = Math.ceil(dom.viewport[0].clientHeight / rowHeight);
-              $log.debug('scroll to row %o', state.firstVisible);
-              var sticky = evt.target.scrollTop + evt.target.clientHeight >= evt.target.scrollHeight;
+              var sticky = scrollTop + clientHeight >= scrollHeight;
               recomputeActive();
-              $log.debug(' state is now %o', state);
-              $log.debug(' sticky = %o', sticky);
             });
-            lastFixPos = evt.target.scrollTop;
+            lastFixPos = scrollTop;
           }
         }
 
@@ -311,7 +307,6 @@
           var oldEnd = oldValue.start + oldValue.active,
               newElements;
           if( newValue === oldValue ){
-            $log.debug('initial listen');
             newElements = addElements(newValue.start, oldEnd, ident.collection, scope, iterStartElement);
             rendered = newElements;
             if( rendered.length ){
@@ -324,17 +319,13 @@
                                 : oldValue.start - newValue.start;
             var endDelta = newEnd >= oldEnd ? newEnd - oldEnd : oldEnd - newEnd;
             var contiguous = delta < (forward ? oldValue.active : newValue.active);
-            $log.debug('change by %o,%o rows %s', delta, endDelta, forward ? 'forward' : 'backward');
             if( !contiguous ){
-              $log.debug('non-contiguous change');
               destroyActiveElements('pop', rendered.length);
               rendered = addElements(newValue.start, newEnd, ident.collection, scope, iterStartElement);
             }else{
               if( forward ){
-                $log.debug('need to remove from the top');
                 destroyActiveElements('shift', delta);
               }else if( delta ){
-                $log.debug('need to add at the top');
                 newElements = addElements(
                   newValue.start,
                   oldValue.start,
@@ -342,11 +333,9 @@
                 rendered = newElements.concat(rendered);
               }
               if( newEnd < oldEnd ){
-                $log.debug('need to remove from the bottom');
                 destroyActiveElements('pop', oldEnd - newEnd);
               }else if( endDelta ){
                 var lastElement = rendered[rendered.length-1];
-                $log.debug('need to add to the bottom');
                 newElements = addElements(
                   oldEnd,
                   newEnd,
