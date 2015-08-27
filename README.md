@@ -6,6 +6,33 @@ Source for the sf.virtualScroll module for AngularJS
 Intended as a replacement for `ng-repeat` for large collections of data and
 contains different solutions to the problem.
 
+Looker Specific info
+-------------------
+
+Clone the repo, make sure you also receive the submodule.
+`git clone --recursive [git url]`
+
+Checkout the looker master branch. All branching and merging should be done here, treat it as you would a regular master branch.
+`git checkout looker-master`
+
+Update the submodule and make sure the submodule remote points to our repository.
+`submodule sync && submodule update`
+
+Do work
+commit work (might include cd into dist and commit)
+*Haven't sorted this out yet.
+
+In order to create the dist files you'll need to run the grunt task.
+
+`npm install grunt cli`
+`npm install`
+`grunt dist`
+
+Now you can push both the main branch and its submodule up to the Looker repo.
+git push origin looker-test --recurse-submodules=on-demand
+
+For now you'll need to manually drop the file into [assets/javascripts/vendor](https://github.com/looker/helltool/tree/master/lib/helltool/assets/javascripts)
+
 About
 -----
 
