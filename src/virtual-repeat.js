@@ -263,8 +263,8 @@
           if( !rowHeight ){
             return;
           }
-          var scrolltop = evt.target.scrolltop
-          var diff = math.abs(scrolltop - lastfixpos);
+          var scrollTop = evt.target.scrollTop;
+          var diff = Math.abs(scrollTop - lastFixPos);
           if(diff > (state.threshold * rowHeight)){
           // Enter the angular world for the state change to take effect.
             state.firstVisible = Math.floor(scrollTop / rowHeight);
