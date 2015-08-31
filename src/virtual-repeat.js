@@ -140,8 +140,6 @@
         height = maxHeight;
       }else if( element.clientHeight ){
         height = element.clientHeight+'px';
-      }else{
-        throw new Error("Unable to compute height of row");
       }
       angular.element(element).css('height', height);
       return parseInt(height, 10);
