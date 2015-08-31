@@ -140,8 +140,6 @@
         height = maxHeight;
       }else if( element.clientHeight ){
         height = element.clientHeight+'px';
-      }else{
-        throw new Error("Unable to compute height of row");
       }
       angular.element(element).css('height', height);
       return parseInt(height, 10);
@@ -264,16 +262,14 @@
             return;
           }
           var scrollTop = evt.target.scrollTop;
-          var scrollHeight = evt.target.scrollHeight;
-          var clientHeight = evt.target.clientHeight;
           var diff = Math.abs(scrollTop - lastFixPos);
           if(diff > (state.threshold * rowHeight)){
           // Enter the angular world for the state change to take effect.
             state.firstVisible = Math.floor(scrollTop / rowHeight);
             state.visible = Math.ceil(dom.viewport[0].clientHeight / rowHeight);
-            var sticky = scrollTop + clientHeight >= scrollHeight;
+            var sticky = scrollTop + evt.target.clientHeight >= evt.target.scrollHeight;
             recomputeActive();
-            scope.digest();
+            scope.$digest();
             lastFixPos = scrollTop;
           }
         }
